@@ -8,11 +8,17 @@ displayBookings();
 function login() {
   let phone = document.getElementById("loginPhone").value;
 
-  // 👉 Restrict access (your father's number)
-  if (phone !== "7674099843") {
+  // ✅ Only allowed numbers (removed 7674099843)
+  let allowedNumbers = ["9441319215", "9441576705"];
+
+  if (!allowedNumbers.includes(phone)) {
     alert("Access denied ❌");
     return;
   }
+
+  document.getElementById("loginSection").style.display = "none";
+  document.getElementById("mainApp").style.display = "block";
+}
 
   document.getElementById("loginSection").style.display = "none";
   document.getElementById("mainApp").style.display = "block";
