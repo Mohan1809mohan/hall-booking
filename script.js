@@ -8,10 +8,13 @@ window.onload = function () {
 
 // ✅ LOGIN FUNCTION (NO RESTRICTION)
 function login() {
-  let phone = document.getElementById("loginPhone").value;
+  let phone = document.getElementById("loginPhone").value.trim();
 
-  if (phone.trim() === "") {
-    alert("Enter phone number");
+  // ✅ Only allowed numbers
+  let allowedNumbers = ["9441319215", "9441576705"];
+
+  if (!allowedNumbers.includes(phone)) {
+    alert("Access denied ❌");
     return;
   }
 
