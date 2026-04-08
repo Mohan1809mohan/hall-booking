@@ -6,37 +6,33 @@
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="loginSection">
-  <h2>Login</h2>
-  <input type="text" id="loginPhone" placeholder="Enter Phone Number">
-  <button onclick="login()">Login</button>
-</div>
-
-<!-- MAIN APP -->
-<div id="mainApp" style="display:none;">
-
 <h1>YADAVA KALYANAMANTAPAM</h1>
 
-<form id="bookingForm">
-  <input type="text" id="name" placeholder="Customer Name" required>
-  <input type="text" id="phone" placeholder="Phone Number" required>
+<div class="container">
+  <input type="text" id="name" placeholder="Customer Name">
+  <input type="text" id="phone" placeholder="Phone Number">
+
+  <select id="eventType">
+    <option value="">Select Function Type</option>
+    <option>Marriage</option>
+    <option>Engagement</option>
+    <option>Birthday</option>
+    <option>Political Meeting</option>
+    <option>Reception</option>
+    <option>Other</option>
+  </select>
 
   <label>Start Date:</label>
-  <input type="date" id="startDate" required>
+  <input type="date" id="start">
 
   <label>End Date:</label>
-  <input type="date" id="endDate" required>
+  <input type="date" id="end">
 
-  <button type="submit">Book Now</button>
-</form>
-
-<h2>Bookings</h2>
-<ul id="bookingList"></ul>
-
+  <button onclick="book()">Book Now</button>
 </div>
 
-<script src="script.js"></script>
+<ul id="list"></ul>
 
+<script src="script.js"></script>
 </body>
 </html>
