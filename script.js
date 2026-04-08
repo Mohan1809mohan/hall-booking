@@ -1,13 +1,13 @@
-// Load saved bookings
+// Load bookings
 let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
 
-// Show saved bookings
-displayBookings();
+// Show existing bookings
+window.onload = function () {
+  displayBookings();
+};
 
-// 🔐 LOGIN FUNCTION
+// ✅ LOGIN FUNCTION (NO RESTRICTION)
 function login() {
-  console.log("Login clicked"); // debug
-
   let phone = document.getElementById("loginPhone").value;
 
   if (phone.trim() === "") {
@@ -15,20 +15,11 @@ function login() {
     return;
   }
 
-  // show main app
   document.getElementById("loginSection").style.display = "none";
   document.getElementById("mainApp").style.display = "block";
 }
 
-  document.getElementById("loginSection").style.display = "none";
-  document.getElementById("mainApp").style.display = "block";
-}
-
-  document.getElementById("loginSection").style.display = "none";
-  document.getElementById("mainApp").style.display = "block";
-}
-
-// 📅 BOOK FUNCTION
+// ✅ BOOK FUNCTION
 function book() {
   let name = document.getElementById("name").value;
   let phone = document.getElementById("phone").value;
@@ -37,7 +28,7 @@ function book() {
   let end = document.getElementById("end").value;
 
   if (!name || !phone || !eventType || !start || !end) {
-    alert("Fill all fields ⚠️");
+    alert("Fill all fields");
     return;
   }
 
@@ -46,7 +37,7 @@ function book() {
     return;
   }
 
-  // 🚫 CHECK DATE OVERLAP
+  // 🚫 CHECK OVERLAP
   let conflict = bookings.some(b => {
     return !(end < b.start || start > b.end);
   });
@@ -56,7 +47,7 @@ function book() {
     return;
   }
 
-  // ✅ SAVE BOOKING
+  // SAVE
   bookings.push({ name, phone, eventType, start, end });
 
   localStorage.setItem("bookings", JSON.stringify(bookings));
@@ -83,7 +74,7 @@ function displayBookings() {
   });
 }
 
-// 🗑 DELETE FUNCTION
+// 🗑 DELETE
 function deleteBooking(index) {
   bookings.splice(index, 1);
   localStorage.setItem("bookings", JSON.stringify(bookings));
