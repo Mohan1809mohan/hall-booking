@@ -1,3 +1,17 @@
+// Allowed numbers
+let allowedUsers = ["9441576705", "9441319215"];
+
+function login() {
+  let phone = document.getElementById("loginPhone").value;
+
+  if (allowedUsers.includes(phone)) {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("mainApp").style.display = "block";
+  } else {
+    alert("Invalid phone number");
+  }
+}
+
 function book() {
   let name = document.getElementById("name").value;
   let phone = document.getElementById("phone").value;
@@ -10,13 +24,7 @@ function book() {
     return;
   }
 
-  let booking = {
-    name,
-    phone,
-    event,
-    start,
-    end
-  };
+  let booking = { name, phone, event, start, end };
 
   let data = JSON.parse(localStorage.getItem("bookings")) || [];
   data.push(booking);
