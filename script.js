@@ -9,12 +9,21 @@ window.onload = function () {
 // ✅ LOGIN FUNCTION (NO RESTRICTION)
 function login() {
   let phone = document.getElementById("loginPhone").value.trim();
+  let password = document.getElementById("loginPassword").value.trim();
 
-  // ✅ Only allowed numbers
-  let allowedNumbers = ["9441319215", "9441576705"];
+  // ✅ Allowed users (phone + password)
+  let users = {
+    "9441319215": "1809",
+    "9441576705": "9441"
+  };
 
-  if (!allowedNumbers.includes(phone)) {
-    alert("Access denied ❌");
+  if (!users[phone]) {
+    alert("Invalid phone number ❌");
+    return;
+  }
+
+  if (users[phone] !== password) {
+    alert("Wrong password ❌");
     return;
   }
 
