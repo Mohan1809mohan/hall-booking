@@ -1,0 +1,55 @@
+body {
+  font-family: Arial;
+  text-align: center;
+  background-image: url("./hall.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+}
+#loginSection {
+  margin-top: 100px;
+}
+
+h1 {
+  background: rgba(0,0,0,0.7);
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+form {
+  background: rgba(0,0,0,0.6);
+  padding: 20px;
+  margin: 30px auto;
+  width: 320px;
+  border-radius: 10px;
+}
+
+input, button {
+  padding: 10px;
+  margin: 8px;
+  width: 90%;
+  border-radius: 5px;
+  border: none;
+}
+
+button {
+  background: green;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+li button {
+  background: red;
+  margin-left: 10px;
+}
+
+ul {
+  background: rgba(0,0,0,0.6);
+  display: inline-block;
+  padding: 15px;
+  border-radius: 10px;
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YADAVA KALYANAMANTAPAM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginSection">
+  <h2>Login</h2>
+  <input type="text" id="loginPhone" placeholder="Enter Phone Number">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none;">
+
+<h1>YADAVA KALYANAMANTAPAM</h1>
+
+<form id="bookingForm">
+  <input type="text" id="name" placeholder="Customer Name" required>
+  <input type="text" id="phone" placeholder="Phone Number" required>
+
+  <label>Start Date:</label>
+  <input type="date" id="startDate" required>
+
+  <label>End Date:</label>
+  <input type="date" id="endDate" required>
+
+  <button type="submit">Book Now</button>
+</form>
+
+<h2>Bookings</h2>
+<ul id="bookingList"></ul>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
