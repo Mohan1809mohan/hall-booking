@@ -1,19 +1,19 @@
 // Load saved bookings
 let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
 
-// Display existing bookings on load
+// Show saved bookings
 displayBookings();
 
 // 🔐 LOGIN FUNCTION
 function login() {
   let phone = document.getElementById("loginPhone").value;
 
-  if (phone === "") {
-    alert("Enter phone number");
+  // 👉 Restrict access (your father's number)
+  if (phone !== "7674099843") {
+    alert("Access denied ❌");
     return;
   }
 
-  // Simple login (you can restrict later)
   document.getElementById("loginSection").style.display = "none";
   document.getElementById("mainApp").style.display = "block";
 }
@@ -27,7 +27,7 @@ function book() {
   let end = document.getElementById("end").value;
 
   if (!name || !phone || !eventType || !start || !end) {
-    alert("Fill all fields");
+    alert("Fill all fields ⚠️");
     return;
   }
 
@@ -63,7 +63,10 @@ function displayBookings() {
   bookings.forEach((b, index) => {
     let li = document.createElement("li");
     li.innerHTML = `
-      ${b.start} to ${b.end} - ${b.name} (${b.eventType})
+      <b>${b.start} → ${b.end}</b><br>
+      ${b.name} (${b.phone})<br>
+      ${b.eventType}
+      <br><br>
       <button onclick="deleteBooking(${index})">Delete</button>
     `;
     list.appendChild(li);
@@ -77,4 +80,11 @@ function deleteBooking(index) {
   displayBookings();
 }
 
-// 🔄 CLEAR
+// 🔄 CLEAR FORM
+function clearForm() {
+  document.getElementById("name").value = "";
+  document.getElementById("phone").value = "";
+  document.getElementById("eventType").value = "";
+  document.getElementById("start").value = "";
+  document.getElementById("end").value = "";
+}
