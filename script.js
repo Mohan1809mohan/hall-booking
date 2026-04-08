@@ -6,15 +6,19 @@ displayBookings();
 
 // 🔐 LOGIN FUNCTION
 function login() {
+  console.log("Login clicked"); // debug
+
   let phone = document.getElementById("loginPhone").value;
 
-  // ✅ Only allowed numbers (removed 7674099843)
-  let allowedNumbers = ["9441319215", "9441576705"];
-
-  if (!allowedNumbers.includes(phone)) {
-    alert("Access denied ❌");
+  if (phone.trim() === "") {
+    alert("Enter phone number");
     return;
   }
+
+  // show main app
+  document.getElementById("loginSection").style.display = "none";
+  document.getElementById("mainApp").style.display = "block";
+}
 
   document.getElementById("loginSection").style.display = "none";
   document.getElementById("mainApp").style.display = "block";
