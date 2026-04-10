@@ -1,7 +1,9 @@
 body {
   font-family: Arial;
-  background: #f5f6fa;
   margin: 0;
+
+  background: url("hall.png") no-repeat center center fixed;
+  background-size: cover;
 }
 
 .container {
