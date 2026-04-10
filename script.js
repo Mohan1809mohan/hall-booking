@@ -1,16 +1,11 @@
-// 🔥 FIREBASE CONFIG (YOUR REAL VALUES)
+// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyCOCs4iVWCafdXPy-7VuMPu4ynwM95MRkA",
   authDomain: "hall-booking-504fd.firebaseapp.com",
   databaseURL: "https://hall-booking-504fd-default-rtdb.firebaseio.com",
-  projectId: "hall-booking-504fd",
-  storageBucket: "hall-booking-504fd.firebasestorage.app",
-  messagingSenderId: "279784179164",
-  appId: "1:279784179164:web:5726f97e13e548278fbb19",
-  measurementId: "G-20TVX3JJTZ"
+  projectId: "hall-booking-504fd"
 };
 
-// ✅ INIT FIREBASE (COMPAT)
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
 
@@ -19,13 +14,9 @@ const db = firebase.database().ref("bookings");
 function customerLogin() {
   let phone = document.getElementById("custPhone").value;
 
-  if (!phone) {
-    alert("Enter phone number");
-    return;
-  }
+  if (!phone) return alert("Enter phone");
 
   localStorage.setItem("user", phone);
-
   document.getElementById("loginBox").style.display = "none";
   document.getElementById("bookingBox").style.display = "block";
 }
@@ -38,16 +29,15 @@ function logout() {
 }
 
 
-// ✅ SHOW OTHER INPUT
+// ✅ OTHER INPUT
 function handleOther() {
   let type = document.getElementById("eventType").value;
-  let other = document.getElementById("otherType");
-
-  other.style.display = (type === "Other") ? "block" : "none";
+  document.getElementById("otherType").style.display =
+    type === "Other" ? "block" : "none";
 }
 
 
-// ✅ CUSTOMER BOOKING
+// ✅ BOOKING
 function book() {
 
   let name = document.getElementById("name").value;
@@ -61,8 +51,7 @@ function book() {
   }
 
   if (!name || !type || !start || !end) {
-    alert("Fill all fields ❗");
-    return;
+    return alert("Fill all fields");
   }
 
   db.once("value").then((snap) => {
@@ -78,17 +67,10 @@ function book() {
     });
 
     if (conflict) {
-      alert("Already booked ❌");
-      return;
+      return alert("Already Booked ❌");
     }
 
-    db.push({
-      name: name,
-      phone: phone,
-      type: type,
-      start: start,
-      end: end
-    });
+    db.push({ name, phone, type, start, end });
 
     alert("Booking Successful ✅");
   });
@@ -100,8 +82,7 @@ function adminLogin() {
   let phone = document.getElementById("adminPhone").value;
 
   if (phone !== "9441319215" && phone !== "9441576705") {
-    alert("Access Denied");
-    return;
+    return alert("Access Denied");
   }
 
   document.getElementById("login").style.display = "none";
@@ -111,7 +92,7 @@ function adminLogin() {
 }
 
 
-// ✅ ADMIN BOOKING
+// ✅ ADMIN BOOK
 function adminBook() {
 
   let name = document.getElementById("aname").value;
@@ -120,19 +101,12 @@ function adminBook() {
   let end = document.getElementById("aend").value;
 
   if (!name || !phone || !start || !end) {
-    alert("Fill all fields");
-    return;
+    return alert("Fill all fields");
   }
 
-  db.push({
-    name: name,
-    phone: phone,
-    start: start,
-    end: end,
-    type: "Manual Booking"
-  });
+  db.push({ name, phone, start, end, type: "Manual" });
 
-  alert("Admin Booking Added ✅");
+  alert("Added ✅");
 }
 
 
