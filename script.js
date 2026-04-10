@@ -28,11 +28,22 @@ function customerLogin() {
 }
 
 // SHOW OTHER FIELD
-document.getElementById("eventType").addEventListener("change", function () {
-  let other = document.getElementById("otherType");
-  other.style.display = this.value === "Other" ? "block" : "none";
-});
+window.onload = function () {
 
+  let eventType = document.getElementById("eventType");
+
+  eventType.addEventListener("change", function () {
+    let other = document.getElementById("otherType");
+
+    if (this.value === "Other") {
+      other.style.display = "block";
+    } else {
+      other.style.display = "none";
+      other.value = "";
+    }
+  });
+
+};
 // 📅 BOOK FUNCTION
 function book() {
   let name = document.getElementById("name").value;
