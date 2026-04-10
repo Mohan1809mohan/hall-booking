@@ -1,4 +1,3 @@
-// 🔥 Firebase Config
 const firebaseConfig = {
   apiKey: "PASTE",
   authDomain: "PASTE",
@@ -9,153 +8,126 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
 
-
-// 👤 CUSTOMER LOGIN
+// CUSTOMER LOGIN
 function customerLogin() {
-  let phone = document.getElementById("custPhone").value;
-
+  let phone = custPhone.value;
   if (!phone) return alert("Enter phone");
 
-  localStorage.setItem("customer", phone);
+  localStorage.setItem("user", phone);
 
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("bookingBox").style.display = "block";
+  loginBox.style.display = "none";
+  bookingBox.style.display = "block";
 
   loadCalendar();
 }
 
-
-// 🚪 LOGOUT
+// LOGOUT
 function logout() {
-  localStorage.removeItem("customer");
+  localStorage.removeItem("user");
   location.reload();
 }
 
-
-// 🔁 OTHER TYPE
+// OTHER OPTION
 function handleOther() {
-  let type = document.getElementById("eventType").value;
-  let other = document.getElementById("otherType");
-
-  other.style.display = (type === "Other") ? "block" : "none";
+  otherType.style.display = (eventType.value === "Other") ? "block" : "none";
 }
 
-
-// 📅 BOOK FUNCTION (FIXED)
+// BOOK
 function book() {
 
   let name = document.getElementById("name").value;
-  let phone = localStorage.getItem("customer");
-  let type = document.getElementById("eventType").value;
-  let start = document.getElementById("start").value;
-  let end = document.getElementById("end").value;
+  let phone = localStorage.getItem("user");
+  let type = eventType.value;
+  let start = startInput.value;
+  let end = endInput.value;
 
-  if (type === "Other") {
-    type = document.getElementById("otherType").value;
-  }
-
-  if (!name || !type || !start || !end) {
-    return alert("Fill all fields");
-  }
+  if (type === "Other") type = otherType.value;
 
   db.once("value", snap => {
     let conflict = false;
 
-    snap.forEach(child => {
-      let b = child.val();
-
-      if (!(end <= b.start || start >= b.end)) {
-        conflict = true;
-      }
+    snap.forEach(c => {
+      let b = c.val();
+      if (!(end <= b.start || start >= b.end)) conflict = true;
     });
 
-    if (conflict) {
-      alert("Already booked ❌");
-      return;
-    }
+    if (conflict) return alert("Already booked");
 
     db.push({ name, phone, type, start, end });
 
-    alert("Booked ✅");
+    alert("Booked");
 
     loadCalendar();
   });
 }
 
-
-// 📅 CALENDAR UI
+// CALENDAR
 function loadCalendar() {
-
   db.once("value", snap => {
 
     let events = [];
 
-    snap.forEach(child => {
-      let b = child.val();
+    snap.forEach(c => {
+      let b = c.val();
 
       events.push({
         title: b.type,
         start: b.start,
-        end: b.end,
-        color: "red"
+        end: b.end
       });
     });
 
-    let calendarEl = document.getElementById("calendar");
-
-    let calendar = new FullCalendar.Calendar(calendarEl, {
+    let cal = new FullCalendar.Calendar(calendar, {
       initialView: "dayGridMonth",
       events: events
     });
 
-    calendar.render();
+    cal.render();
   });
 }
 
-
-// 🧑‍💼 ADMIN LOGIN
+// ADMIN LOGIN
 function adminLogin() {
+  let phone = adminPhone.value;
 
-  let phone = document.getElementById("adminPhone").value;
+  if (phone !== "9441319215" && phone !== "9441576705")
+    return alert("Denied");
 
-  if (phone !== "9441319215" && phone !== "9441576705") {
-    return alert("Access denied");
-  }
-
-  document.getElementById("login").style.display = "none";
-  document.getElementById("panel").style.display = "block";
+  login.style.display = "none";
+  panel.style.display = "block";
 
   loadAdmin();
 }
 
+// ADMIN BOOK
+function adminBook() {
+  let name = aname.value;
+  let phone = aphone.value;
+  let start = astart.value;
+  let end = aend.value;
 
-// 📋 ADMIN VIEW
+  db.push({ name, phone, start, end, type: "Manual" });
+}
+
+// ADMIN LIST
 function loadAdmin() {
   db.on("value", snap => {
 
-    let list = document.getElementById("list");
     list.innerHTML = "";
 
-    snap.forEach(child => {
-      let b = child.val();
-      let id = child.key;
+    snap.forEach(c => {
+      let b = c.val();
+      let id = c.key;
 
-      let li = document.createElement("li");
-
-      li.innerHTML = `
-        ${b.start} → ${b.end}<br>
-        ${b.name}<br>
-        ${b.type}
-        <button onclick="deleteBooking('${id}')">Delete</button>
+      list.innerHTML += `
+        <li>
+          ${b.start} → ${b.end}<br>
+          ${b.name}<br>
+          ${b.type}
+          <button onclick="db.child('${id}').remove()">Delete</button>
+        </li>
       `;
-
-      list.appendChild(li);
     });
+
   });
-}
-
-
-// 🗑 DELETE
-function deleteBooking(id) {
-  db.child(id).remove();
 }
