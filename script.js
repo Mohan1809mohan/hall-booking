@@ -1,11 +1,16 @@
-// 🔥 Firebase Config (PUT YOUR REAL VALUES)
+// 🔥 FIREBASE CONFIG (YOUR REAL VALUES)
 const firebaseConfig = {
-  apiKey: "PASTE_HERE",
-  authDomain: "PASTE_HERE",
-  databaseURL: "PASTE_HERE",
-  projectId: "PASTE_HERE"
+  apiKey: "AIzaSyCOCs4iVWCafdXPy-7VuMPu4ynwM95MRkA",
+  authDomain: "hall-booking-504fd.firebaseapp.com",
+  databaseURL: "https://hall-booking-504fd-default-rtdb.firebaseio.com",
+  projectId: "hall-booking-504fd",
+  storageBucket: "hall-booking-504fd.firebasestorage.app",
+  messagingSenderId: "279784179164",
+  appId: "1:279784179164:web:5726f97e13e548278fbb19",
+  measurementId: "G-20TVX3JJTZ"
 };
 
+// ✅ INIT FIREBASE (COMPAT)
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
 
@@ -38,15 +43,11 @@ function handleOther() {
   let type = document.getElementById("eventType").value;
   let other = document.getElementById("otherType");
 
-  if (type === "Other") {
-    other.style.display = "block";
-  } else {
-    other.style.display = "none";
-    other.value = "";
-  }
+  other.style.display = (type === "Other") ? "block" : "none";
 }
 
 
+// ✅ CUSTOMER BOOKING
 function book() {
 
   let name = document.getElementById("name").value;
@@ -94,14 +95,54 @@ function book() {
 }
 
 
+// ✅ ADMIN LOGIN
+function adminLogin() {
+  let phone = document.getElementById("adminPhone").value;
+
+  if (phone !== "9441319215" && phone !== "9441576705") {
+    alert("Access Denied");
+    return;
+  }
+
+  document.getElementById("login").style.display = "none";
+  document.getElementById("panel").style.display = "block";
+
+  loadAdmin();
+}
+
+
+// ✅ ADMIN BOOKING
+function adminBook() {
+
+  let name = document.getElementById("aname").value;
+  let phone = document.getElementById("aphone").value;
+  let start = document.getElementById("astart").value;
+  let end = document.getElementById("aend").value;
+
+  if (!name || !phone || !start || !end) {
+    alert("Fill all fields");
+    return;
+  }
+
+  db.push({
+    name: name,
+    phone: phone,
+    start: start,
+    end: end,
+    type: "Manual Booking"
+  });
+
+  alert("Admin Booking Added ✅");
+}
+
+
 // ✅ LOAD ADMIN DATA
 function loadAdmin() {
 
   db.on("value", (snap) => {
 
     let list = document.getElementById("list");
-
-    if (!list) return; // prevents error on customer page
+    if (!list) return;
 
     list.innerHTML = "";
 
