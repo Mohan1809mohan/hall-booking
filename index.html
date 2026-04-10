@@ -3,45 +3,49 @@
 <head>
   <title>YADAVA KALYANAMANTAPAM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="overlay">
+<div class="container">
 
-  <h1>YADAVA KALYANAMANTAPAM</h1>
+  <div class="glass-card">
 
-  <!-- LOGIN -->
-  <div id="loginBox" class="card">
-    <h2>Customer Login</h2>
-    <input type="text" id="custPhone" placeholder="Enter Phone Number">
-    <button onclick="customerLogin()">Login</button>
-  </div>
+    <h1>YADAVA KALYANAMANTAPAM</h1>
 
-  <!-- BOOKING -->
-  <div id="bookingBox" class="card" style="display:none;">
-    
-    <input type="text" id="name" placeholder="Your Name">
+    <!-- LOGIN -->
+    <div id="loginBox">
+      <input type="text" id="custPhone" placeholder="Enter Mobile Number">
+      <button onclick="customerLogin()">Continue</button>
+    </div>
 
-    <select id="eventType">
-      <option value="">Function Type</option>
-      <option>Marriage</option>
-      <option>Birthday</option>
-      <option>Reception</option>
-      <option>Political Meeting</option>
-      <option>Family or Friends Meet</option>
-      <option>Other</option>
-    </select>
+    <!-- BOOKING -->
+    <div id="bookingBox" style="display:none;">
 
-    <input type="text" id="otherType" placeholder="Enter function type" style="display:none;">
+      <input type="text" id="name" placeholder="Your Name">
 
-    <label>Start Date</label>
-    <input type="date" id="start">
+      <select id="eventType">
+        <option value="">Select Function</option>
+        <option>Marriage</option>
+        <option>Birthday</option>
+        <option>Reception</option>
+        <option>Other</option>
+      </select>
 
-    <label>End Date</label>
-    <input type="date" id="end">
+      <input type="text" id="otherType" placeholder="Enter function type" style="display:none;">
 
-    <button onclick="book()">Book Now</button>
+      <div class="date-row">
+        <input type="date" id="start">
+        <input type="date" id="end">
+      </div>
+
+      <button onclick="book()">Confirm Booking</button>
+
+    </div>
 
   </div>
 
