@@ -1,78 +1,27 @@
-// 🔥 Firebase Config (PUT YOUR VALUES)
+// 🔥 Firebase Config
 const firebaseConfig = {
-  apiKey: "PASTE_HERE",
-  authDomain: "PASTE_HERE",
-  databaseURL: "PASTE_HERE",
-  projectId: "PASTE_HERE",
-  storageBucket: "PASTE_HERE",
-  messagingSenderId: "PASTE_HERE",
-  appId: "PASTE_HERE"
+  apiKey: "PASTE",
+  authDomain: "PASTE",
+  databaseURL: "PASTE",
+  projectId: "PASTE"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
 
 
-// 🚀 RUN AFTER PAGE LOAD
-window.onload = function () {
-
-  // ✅ Auto login (remember user)
-  let savedUser = localStorage.getItem("customer");
-  if (savedUser) {
-    showBooking();
-  }
-
-  // ✅ Other option logic
-  let eventType = document.getElementById("eventType");
-  let otherInput = document.getElementById("otherType");
-
-  if (eventType) {
-    eventType.addEventListener("change", function () {
-      if (this.value === "Other") {
-        otherInput.style.display = "block";
-        otherInput.focus();
-      } else {
-        otherInput.style.display = "none";
-        otherInput.value = "";
-      }
-    });
-  }
-
-};
-function handleOther() {
-  let eventType = document.getElementById("eventType").value;
-  let otherInput = document.getElementById("otherType");
-
-  if (eventType === "Other") {
-    otherInput.style.display = "block";
-    otherInput.focus();
-  } else {
-    otherInput.style.display = "none";
-    otherInput.value = "";
-  }
-}
-
-
 // 👤 CUSTOMER LOGIN
 function customerLogin() {
   let phone = document.getElementById("custPhone").value;
 
-  if (!phone || phone.length < 10) {
-    alert("Enter valid mobile number");
-    return;
-  }
+  if (!phone) return alert("Enter phone");
 
-  // ✅ Save login
   localStorage.setItem("customer", phone);
 
-  showBooking();
-}
-
-
-// 📦 SHOW BOOKING PAGE
-function showBooking() {
   document.getElementById("loginBox").style.display = "none";
   document.getElementById("bookingBox").style.display = "block";
+
+  loadCalendar();
 }
 
 
@@ -83,53 +32,130 @@ function logout() {
 }
 
 
-// 📅 BOOK FUNCTION
+// 🔁 OTHER TYPE
+function handleOther() {
+  let type = document.getElementById("eventType").value;
+  let other = document.getElementById("otherType");
+
+  other.style.display = (type === "Other") ? "block" : "none";
+}
+
+
+// 📅 BOOK FUNCTION (FIXED)
 function book() {
+
   let name = document.getElementById("name").value;
   let phone = localStorage.getItem("customer");
   let type = document.getElementById("eventType").value;
   let start = document.getElementById("start").value;
   let end = document.getElementById("end").value;
 
-  // 👉 Handle "Other"
   if (type === "Other") {
     type = document.getElementById("otherType").value;
   }
 
   if (!name || !type || !start || !end) {
-    alert("Fill all fields");
-    return;
+    return alert("Fill all fields");
   }
 
-  // ❌ DATE CONFLICT CHECK
   db.once("value", snap => {
     let conflict = false;
 
     snap.forEach(child => {
       let b = child.val();
 
-      // overlap condition
       if (!(end <= b.start || start >= b.end)) {
         conflict = true;
       }
     });
 
     if (conflict) {
-      alert("Date already booked ❌");
+      alert("Already booked ❌");
       return;
     }
 
-    // ✅ SAVE BOOKING
     db.push({ name, phone, type, start, end });
 
-    alert("Booking Confirmed 🎉");
+    alert("Booked ✅");
 
-    // 🔄 RESET FORM
-    document.getElementById("name").value = "";
-    document.getElementById("eventType").value = "";
-    document.getElementById("otherType").value = "";
-    document.getElementById("otherType").style.display = "none";
-    document.getElementById("start").value = "";
-    document.getElementById("end").value = "";
+    loadCalendar();
   });
+}
+
+
+// 📅 CALENDAR UI
+function loadCalendar() {
+
+  db.once("value", snap => {
+
+    let events = [];
+
+    snap.forEach(child => {
+      let b = child.val();
+
+      events.push({
+        title: b.type,
+        start: b.start,
+        end: b.end,
+        color: "red"
+      });
+    });
+
+    let calendarEl = document.getElementById("calendar");
+
+    let calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth",
+      events: events
+    });
+
+    calendar.render();
+  });
+}
+
+
+// 🧑‍💼 ADMIN LOGIN
+function adminLogin() {
+
+  let phone = document.getElementById("adminPhone").value;
+
+  if (phone !== "9441319215" && phone !== "9441576705") {
+    return alert("Access denied");
+  }
+
+  document.getElementById("login").style.display = "none";
+  document.getElementById("panel").style.display = "block";
+
+  loadAdmin();
+}
+
+
+// 📋 ADMIN VIEW
+function loadAdmin() {
+  db.on("value", snap => {
+
+    let list = document.getElementById("list");
+    list.innerHTML = "";
+
+    snap.forEach(child => {
+      let b = child.val();
+      let id = child.key;
+
+      let li = document.createElement("li");
+
+      li.innerHTML = `
+        ${b.start} → ${b.end}<br>
+        ${b.name}<br>
+        ${b.type}
+        <button onclick="deleteBooking('${id}')">Delete</button>
+      `;
+
+      list.appendChild(li);
+    });
+  });
+}
+
+
+// 🗑 DELETE
+function deleteBooking(id) {
+  db.child(id).remove();
 }
