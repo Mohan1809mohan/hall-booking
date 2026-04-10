@@ -7,54 +7,42 @@
 </head>
 <body>
 
-<h1>YADAVA KALYANAMANTAPAM</h1>
+<h1>Book Function Hall</h1>
 
-<!-- LOGIN -->
-<div id="loginSection">
-  <h2>Login</h2>
-  <input type="text" id="loginPhone" placeholder="Phone Number">
-  <input type="password" id="loginPassword" placeholder="Password">
-  <button onclick="login()">Login</button>
+<div class="card">
+  <input type="text" id="name" placeholder="Customer Name">
+  <input type="text" id="phone" placeholder="Phone Number">
+
+  <select id="eventType" onchange="toggleOtherInput()">
+    <option value="">Function Type</option>
+    <option>Marriage</option>
+    <option>Engagement</option>
+    <option>Birthday</option>
+    <option>Reception</option>
+    <option>Political Meeting</option>
+    <option>Family ot Friends Meet</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <input type="text" id="otherType" placeholder="Enter function type" style="display:none;">
+
+  <label>Start Date</label>
+  <input type="date" id="start">
+
+  <label>End Date</label>
+  <input type="date" id="end">
+
+  <button onclick="book()">Book Now</button>
 </div>
 
-<!-- MAIN APP -->
-<div id="mainApp" style="display:none;">
+<h3>Booked Dates</h3>
+<ul id="list"></ul>
 
-  <button onclick="logout()">Logout</button>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
-  <div class="card">
-    <input type="text" id="name" placeholder="Customer Name">
-    <input type="text" id="phone" placeholder="Phone Number">
-
-    <select id="eventType" onchange="toggleOtherInput()">
-      <option value="">Function Type</option>
-      <option>Marriage</option>
-      <option>Engagement</option>
-      <option>Birthday</option>
-      <option>Reception</option>
-      <option>Political Meeting</option>
-      <option>Family or Friends Meet</option>
-      <option value="Other">Other</option>
-    </select>
-
-    <!-- NEW INPUT (Hidden initially) -->
-    <input type="text" id="otherType" placeholder="Enter function type" style="display:none;">
-
-    <label>Start Date</label>
-    <input type="date" id="start">
-
-    <label>End Date</label>
-    <input type="date" id="end">
-
-    <button onclick="book()">Book</button>
-  </div>
-
-  <h3>Bookings</h3>
-  <ul id="list"></ul>
-
-</div>
-
-<script src="script.js?v=60"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
