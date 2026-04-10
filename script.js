@@ -39,6 +39,18 @@ window.onload = function () {
   }
 
 };
+function handleOther() {
+  let eventType = document.getElementById("eventType").value;
+  let otherInput = document.getElementById("otherType");
+
+  if (eventType === "Other") {
+    otherInput.style.display = "block";
+    otherInput.focus();
+  } else {
+    otherInput.style.display = "none";
+    otherInput.value = "";
+  }
+}
 
 
 // 👤 CUSTOMER LOGIN
