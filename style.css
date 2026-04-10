@@ -5,7 +5,7 @@ body {
   height: 100vh;
 }
 
-/* CENTER CONTAINER */
+/* CENTER */
 .container {
   display: flex;
   justify-content: center;
@@ -13,7 +13,7 @@ body {
   height: 100%;
 }
 
-/* GLASS EFFECT CARD */
+/* GLASS CARD */
 .glass-card {
   backdrop-filter: blur(15px);
   background: rgba(255,255,255,0.15);
@@ -25,7 +25,6 @@ body {
   box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
 
-/* TITLE */
 h1 {
   font-size: 20px;
   margin-bottom: 20px;
@@ -60,7 +59,6 @@ button {
   cursor: pointer;
 }
 
-/* BUTTON HOVER */
 button:hover {
   background: #ff1e4d;
 }
