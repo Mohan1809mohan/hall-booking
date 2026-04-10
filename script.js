@@ -1,24 +1,24 @@
-// 🔐 USERS (ONLY YOU + YOUR FATHER)
+// 🔥 FIREBASE CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyCOCs4iVWCafdXPy-7VuMPu4ynwM95MRkA",
+  authDomain: "hall-booking-504fd.firebaseapp.com",
+  databaseURL: "https://hall-booking-504fd-default-rtdb.firebaseio.com",
+  projectId: "hall-booking-504fd",
+  storageBucket: "hall-booking-504fd.firebasestorage.app",
+  messagingSenderId: "279784179164",
+  appId: "1:279784179164:web:7645d8a4198982d68fbb19"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database().ref("bookings");
+
+// 🔐 ADMIN USERS
 let users = {
   "9441319215": "1809",
   "9441576705": "9441"
 };
 
-// 💾 LOAD BOOKINGS
-let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
-
-// 🚀 AUTO LOGIN
-window.onload = function () {
-  let user = localStorage.getItem("user");
-
-  if (user) {
-    showApp();
-  }
-
-  displayBookings();
-};
-
-// 🔐 LOGIN
+// LOGIN
 function login() {
   let phone = document.getElementById("loginPhone").value.trim();
   let pass = document.getElementById("loginPassword").value.trim();
@@ -28,36 +28,48 @@ function login() {
     return;
   }
 
-  localStorage.setItem("user", phone);
-  showApp();
-}
-
-// 🖥 SHOW APP
-function showApp() {
+  localStorage.setItem("admin", phone);
   document.getElementById("loginSection").style.display = "none";
   document.getElementById("mainApp").style.display = "block";
 }
 
-// 🚪 LOGOUT
+// AUTO LOGIN
+window.onload = function () {
+  if (localStorage.getItem("admin")) {
+    let loginSection = document.getElementById("loginSection");
+    let mainApp = document.getElementById("mainApp");
+
+    if (loginSection && mainApp) {
+      loginSection.style.display = "none";
+      mainApp.style.display = "block";
+    }
+  }
+
+  loadBookings();
+};
+
+// LOGOUT
 function logout() {
-  localStorage.removeItem("user");
+  localStorage.removeItem("admin");
   location.reload();
 }
 
-// 🔄 SHOW/HIDE OTHER INPUT
+// SHOW OTHER INPUT
 function toggleOtherInput() {
-  let type = document.getElementById("eventType").value;
-  let otherBox = document.getElementById("otherType");
+  let type = document.getElementById("eventType");
+  let other = document.getElementById("otherType");
 
-  if (type === "Other") {
-    otherBox.style.display = "block";
+  if (!type || !other) return;
+
+  if (type.value === "Other") {
+    other.style.display = "block";
   } else {
-    otherBox.style.display = "none";
-    otherBox.value = "";
+    other.style.display = "none";
+    other.value = "";
   }
 }
 
-// 📅 BOOK FUNCTION
+// BOOK FUNCTION (PUBLIC)
 function book() {
   let name = document.getElementById("name").value;
   let phone = document.getElementById("phone").value;
@@ -65,14 +77,8 @@ function book() {
   let start = document.getElementById("start").value;
   let end = document.getElementById("end").value;
 
-  // ✅ HANDLE "OTHER"
   if (type === "Other") {
-    type = document.getElementById("otherType").value.trim();
-
-    if (type === "") {
-      alert("Please enter function type");
-      return;
-    }
+    type = document.getElementById("otherType").value;
   }
 
   if (!name || !phone || !type || !start || !end) {
@@ -85,57 +91,45 @@ function book() {
     return;
   }
 
-  // ✅ SAME DAY CHANGEOVER LOGIC
-  let conflict = bookings.some(b => {
-    return !(end <= b.start || start >= b.end);
-  });
+  db.once("value", snap => {
+    let conflict = false;
 
-  if (conflict) {
-    alert("Date already booked ❌");
-    return;
-  }
+    snap.forEach(child => {
+      let b = child.val();
 
-  // 💾 SAVE
-  bookings.push({ name, phone, type, start, end });
+      if (!(end <= b.start || start >= b.end)) {
+        conflict = true;
+      }
+    });
 
-  localStorage.setItem("bookings", JSON.stringify(bookings));
+    if (conflict) {
+      alert("Date already booked ❌");
+      return;
+    }
 
-  displayBookings();
-  clearForm();
-}
-
-// 📋 DISPLAY BOOKINGS
-function displayBookings() {
-  let list = document.getElementById("list");
-  list.innerHTML = "";
-
-  bookings.forEach((b, index) => {
-    let li = document.createElement("li");
-    li.innerHTML = `
-      <b>${b.start} → ${b.end}</b><br>
-      ${b.name} (${b.phone})<br>
-      ${b.type}
-      <br><br>
-      <button onclick="deleteBooking(${index})">Delete</button>
-    `;
-    list.appendChild(li);
+    db.push({ name, phone, type, start, end });
+    alert("Booking successful ✅");
   });
 }
 
-// 🗑 DELETE BOOKING
-function deleteBooking(index) {
-  bookings.splice(index, 1);
-  localStorage.setItem("bookings", JSON.stringify(bookings));
-  displayBookings();
-}
+// LOAD BOOKINGS
+function loadBookings() {
+  db.on("value", snap => {
+    let list = document.getElementById("list");
+    if (!list) return;
 
-// 🔄 CLEAR FORM
-function clearForm() {
-  document.getElementById("name").value = "";
-  document.getElementById("phone").value = "";
-  document.getElementById("eventType").value = "";
-  document.getElementById("otherType").value = "";
-  document.getElementById("otherType").style.display = "none";
-  document.getElementById("start").value = "";
-  document.getElementById("end").value = "";
+    list.innerHTML = "";
+
+    snap.forEach(child => {
+      let b = child.val();
+
+      let li = document.createElement("li");
+      li.innerHTML = `
+        <b>${b.start} → ${b.end}</b><br>
+        ${b.name} (${b.phone})<br>
+        ${b.type}
+      `;
+      list.appendChild(li);
+    });
+  });
 }
