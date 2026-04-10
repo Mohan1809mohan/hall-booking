@@ -1,34 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Admin Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <title>Admin</title>
 </head>
 <body>
 
-<div class="container">
+<h2>Admin Panel</h2>
 
-  <div class="glass-card">
+<div id="login">
+  <input type="text" id="adminPhone" placeholder="Phone">
+  <button onclick="adminLogin()">Login</button>
+</div>
 
-    <h2>Admin Panel</h2>
-
-    <!-- LOGIN -->
-    <div id="adminLogin">
-      <input type="text" id="adminPhone" placeholder="Enter Admin Phone">
-      <button onclick="adminLogin()">Login</button>
-    </div>
-
-    <!-- DASHBOARD -->
-    <div id="adminPanel" style="display:none;">
-      <h3>All Bookings</h3>
-      <ul id="adminList"></ul>
-    </div>
-
-  </div>
-
+<div id="panel" style="display:none;">
+  <ul id="list"></ul>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
