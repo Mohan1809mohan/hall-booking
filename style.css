@@ -1,112 +1,43 @@
-// 🔥 YOUR FIREBASE CONFIG
-const firebaseConfig = {
-  apiKey: "PASTE_HERE",
-  authDomain: "PASTE_HERE",
-  databaseURL: "PASTE_HERE",
-  projectId: "PASTE_HERE",
-  storageBucket: "PASTE_HERE",
-  messagingSenderId: "PASTE_HERE",
-  appId: "PASTE_HERE"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database().ref("bookings");
-
-// SHOW/HIDE OTHER
-document.getElementById("eventType")?.addEventListener("change", function () {
-  let other = document.getElementById("otherType");
-  if (this.value === "Other") {
-    other.style.display = "block";
-  } else {
-    other.style.display = "none";
-  }
-});
-
-// BOOK FUNCTION
-function book() {
-  let name = nameInput.value;
-  let phone = phoneInput.value;
-  let type = eventType.value;
-  let start = startInput.value;
-  let end = endInput.value;
-
-  if (type === "Other") {
-    type = document.getElementById("otherType").value;
-  }
-
-  if (!name || !phone || !type || !start || !end) {
-    alert("Fill all fields");
-    return;
-  }
-
-  db.once("value", snap => {
-    let conflict = false;
-
-    snap.forEach(child => {
-      let b = child.val();
-
-      if (!(end <= b.start || start >= b.end)) {
-        conflict = true;
-      }
-    });
-
-    if (conflict) {
-      alert("Date already booked ❌");
-      return;
-    }
-
-    db.push({ name, phone, type, start, end });
-
-    alert("Booking Successful ✅");
-  });
+body {
+  margin: 0;
+  font-family: Arial;
+  background: url("hall.png") no-repeat center center/cover;
+  height: 100vh;
 }
 
-// ADMIN LOGIN
-function adminLogin() {
-  let phone = document.getElementById("adminPhone").value;
-
-  if (phone !== "9441319215" && phone !== "9441576705") {
-    alert("Access denied ❌");
-    return;
-  }
-
-  document.getElementById("login").style.display = "none";
-  document.getElementById("panel").style.display = "block";
-
-  loadBookings();
+/* DARK OVERLAY */
+.overlay {
+  background: rgba(0,0,0,0.6);
+  height: 100vh;
+  text-align: center;
+  color: white;
+  padding-top: 20px;
 }
 
-// LOAD BOOKINGS
-function loadBookings() {
-  db.on("value", snap => {
-    let list = document.getElementById("list");
-    list.innerHTML = "";
-
-    snap.forEach(child => {
-      let b = child.val();
-      let id = child.key;
-
-      let li = document.createElement("li");
-      li.innerHTML = `
-        ${b.start} → ${b.end}<br>
-        ${b.name} (${b.phone})<br>
-        ${b.type}
-        <br>
-        <button onclick="deleteBooking('${id}')">Delete</button>
-      `;
-      list.appendChild(li);
-    });
-  });
+h1 {
+  margin-bottom: 20px;
 }
 
-// DELETE
-function deleteBooking(id) {
-  db.child(id).remove();
+/* CARD DESIGN */
+.card {
+  background: white;
+  color: black;
+  width: 300px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 12px;
 }
 
-// ELEMENT SHORTCUTS
-const nameInput = document.getElementById("name");
-const phoneInput = document.getElementById("phone");
-const eventType = document.getElementById("eventType");
-const startInput = document.getElementById("start");
-const endInput = document.getElementById("end");
+/* INPUTS */
+input, select, button {
+  width: 90%;
+  padding: 10px;
+  margin: 8px;
+  border-radius: 6px;
+}
+
+button {
+  background: darkblue;
+  color: white;
+  border: none;
+}
