@@ -1,4 +1,4 @@
-// 🔥 Firebase Config
+// 🔥 Firebase Config (keep your own values)
 const firebaseConfig = {
   apiKey: "PASTE_HERE",
   authDomain: "PASTE_HERE",
@@ -13,34 +13,30 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
 
 
-// ✅ RUN AFTER PAGE LOAD
-window.onload = function () {
+// ✅ WAIT FOR PAGE LOAD (IMPORTANT FIX)
+document.addEventListener("DOMContentLoaded", function () {
 
-  // 👇 GET ELEMENTS
-  let eventType = document.getElementById("eventType");
-  let otherInput = document.getElementById("otherType");
+  const eventType = document.getElementById("eventType");
+  const otherInput = document.getElementById("otherType");
 
-  // 👇 CHANGE EVENT
   eventType.addEventListener("change", function () {
-
     if (this.value === "Other") {
       otherInput.style.display = "block";
-      otherInput.focus();   // 👈 auto focus (nice UX)
+      otherInput.focus(); // nice UX
     } else {
       otherInput.style.display = "none";
       otherInput.value = "";
     }
-
   });
 
-};
+});
 
 
-// 👤 LOGIN
+// 👤 CUSTOMER LOGIN
 function customerLogin() {
   let phone = document.getElementById("custPhone").value;
 
-  if (phone.length < 10) {
+  if (!phone || phone.length < 10) {
     alert("Enter valid mobile number");
     return;
   }
@@ -60,7 +56,7 @@ function book() {
   let start = document.getElementById("start").value;
   let end = document.getElementById("end").value;
 
-  // 👉 GET OTHER VALUE
+  // 👉 handle "Other"
   if (type === "Other") {
     type = document.getElementById("otherType").value;
   }
@@ -70,7 +66,7 @@ function book() {
     return;
   }
 
-  // ❌ DATE CONFLICT CHECK
+  // ❌ CHECK DATE CONFLICT
   db.once("value", snap => {
     let conflict = false;
 
@@ -90,5 +86,13 @@ function book() {
     db.push({ name, phone, type, start, end });
 
     alert("Booking Confirmed 🎉");
+
+    // 🔄 clear form
+    document.getElementById("name").value = "";
+    document.getElementById("eventType").value = "";
+    document.getElementById("otherType").value = "";
+    document.getElementById("otherType").style.display = "none";
+    document.getElementById("start").value = "";
+    document.getElementById("end").value = "";
   });
 }
