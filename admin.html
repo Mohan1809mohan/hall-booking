@@ -7,26 +7,18 @@
 </head>
 <body>
 
-<h1>Admin Login</h1>
+<h1>Admin Panel</h1>
 
-<!-- LOGIN -->
-<div id="loginSection">
-  <input type="text" id="loginPhone" placeholder="Phone Number">
-  <input type="password" id="loginPassword" placeholder="Password">
-  <button onclick="login()">Login</button>
+<div id="login">
+  <input type="text" id="adminPhone" placeholder="Enter Phone">
+  <button onclick="adminLogin()">Login</button>
 </div>
 
-<!-- MAIN ADMIN PANEL -->
-<div id="mainApp" style="display:none;">
-
-  <button onclick="logout()">Logout</button>
-
-  <h2>All Bookings</h2>
+<div id="panel" style="display:none;">
+  <h3>All Bookings</h3>
   <ul id="list"></ul>
-
 </div>
 
-<!-- Firebase Scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
