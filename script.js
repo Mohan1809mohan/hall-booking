@@ -1,13 +1,13 @@
-// USERS (ONLY YOU + YOUR FATHER)
+// 🔐 USERS (ONLY YOU + YOUR FATHER)
 let users = {
   "9441319215": "1809",
   "9441576705": "9441"
 };
 
-// LOAD DATA
+// 💾 LOAD BOOKINGS
 let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
 
-// AUTO LOGIN
+// 🚀 AUTO LOGIN
 window.onload = function () {
   let user = localStorage.getItem("user");
 
@@ -18,7 +18,7 @@ window.onload = function () {
   displayBookings();
 };
 
-// LOGIN
+// 🔐 LOGIN
 function login() {
   let phone = document.getElementById("loginPhone").value.trim();
   let pass = document.getElementById("loginPassword").value.trim();
@@ -32,25 +32,48 @@ function login() {
   showApp();
 }
 
-// SHOW APP
+// 🖥 SHOW APP
 function showApp() {
   document.getElementById("loginSection").style.display = "none";
   document.getElementById("mainApp").style.display = "block";
 }
 
-// LOGOUT
+// 🚪 LOGOUT
 function logout() {
   localStorage.removeItem("user");
   location.reload();
 }
 
-// BOOK FUNCTION
+// 🔄 SHOW/HIDE OTHER INPUT
+function toggleOtherInput() {
+  let type = document.getElementById("eventType").value;
+  let otherBox = document.getElementById("otherType");
+
+  if (type === "Other") {
+    otherBox.style.display = "block";
+  } else {
+    otherBox.style.display = "none";
+    otherBox.value = "";
+  }
+}
+
+// 📅 BOOK FUNCTION
 function book() {
   let name = document.getElementById("name").value;
   let phone = document.getElementById("phone").value;
   let type = document.getElementById("eventType").value;
   let start = document.getElementById("start").value;
   let end = document.getElementById("end").value;
+
+  // ✅ HANDLE "OTHER"
+  if (type === "Other") {
+    type = document.getElementById("otherType").value.trim();
+
+    if (type === "") {
+      alert("Please enter function type");
+      return;
+    }
+  }
 
   if (!name || !phone || !type || !start || !end) {
     alert("Fill all fields");
@@ -72,6 +95,7 @@ function book() {
     return;
   }
 
+  // 💾 SAVE
   bookings.push({ name, phone, type, start, end });
 
   localStorage.setItem("bookings", JSON.stringify(bookings));
@@ -80,7 +104,7 @@ function book() {
   clearForm();
 }
 
-// DISPLAY BOOKINGS
+// 📋 DISPLAY BOOKINGS
 function displayBookings() {
   let list = document.getElementById("list");
   list.innerHTML = "";
@@ -98,18 +122,20 @@ function displayBookings() {
   });
 }
 
-// DELETE
+// 🗑 DELETE BOOKING
 function deleteBooking(index) {
   bookings.splice(index, 1);
   localStorage.setItem("bookings", JSON.stringify(bookings));
   displayBookings();
 }
 
-// CLEAR FORM
+// 🔄 CLEAR FORM
 function clearForm() {
   document.getElementById("name").value = "";
   document.getElementById("phone").value = "";
   document.getElementById("eventType").value = "";
+  document.getElementById("otherType").value = "";
+  document.getElementById("otherType").style.display = "none";
   document.getElementById("start").value = "";
   document.getElementById("end").value = "";
 }
