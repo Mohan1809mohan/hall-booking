@@ -12,6 +12,30 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
 
+
+// ✅ RUN AFTER PAGE LOAD
+window.onload = function () {
+
+  // 👇 GET ELEMENTS
+  let eventType = document.getElementById("eventType");
+  let otherInput = document.getElementById("otherType");
+
+  // 👇 CHANGE EVENT
+  eventType.addEventListener("change", function () {
+
+    if (this.value === "Other") {
+      otherInput.style.display = "block";
+      otherInput.focus();   // 👈 auto focus (nice UX)
+    } else {
+      otherInput.style.display = "none";
+      otherInput.value = "";
+    }
+
+  });
+
+};
+
+
 // 👤 LOGIN
 function customerLogin() {
   let phone = document.getElementById("custPhone").value;
@@ -27,23 +51,7 @@ function customerLogin() {
   document.getElementById("bookingBox").style.display = "block";
 }
 
-// SHOW OTHER FIELD
-window.onload = function () {
 
-  let eventType = document.getElementById("eventType");
-
-  eventType.addEventListener("change", function () {
-    let other = document.getElementById("otherType");
-
-    if (this.value === "Other") {
-      other.style.display = "block";
-    } else {
-      other.style.display = "none";
-      other.value = "";
-    }
-  });
-
-};
 // 📅 BOOK FUNCTION
 function book() {
   let name = document.getElementById("name").value;
@@ -52,6 +60,7 @@ function book() {
   let start = document.getElementById("start").value;
   let end = document.getElementById("end").value;
 
+  // 👉 GET OTHER VALUE
   if (type === "Other") {
     type = document.getElementById("otherType").value;
   }
@@ -61,7 +70,7 @@ function book() {
     return;
   }
 
-  // CHECK CONFLICT
+  // ❌ DATE CONFLICT CHECK
   db.once("value", snap => {
     let conflict = false;
 
