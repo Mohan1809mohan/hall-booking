@@ -47,7 +47,6 @@ function handleOther() {
 }
 
 
-// ✅ CUSTOMER BOOKING
 function book() {
 
   let name = document.getElementById("name").value;
@@ -92,64 +91,6 @@ function book() {
 
     alert("Booking Successful ✅");
   });
-}
-
-    if (conflict) {
-      alert("Already booked ❌");
-      return;
-    }
-
-    db.push({
-      name: name,
-      phone: phone,
-      type: type,
-      start: start,
-      end: end
-    });
-
-    alert("Booking Successful ✅");
-  });
-}
-
-
-// ✅ ADMIN LOGIN
-function adminLogin() {
-  let phone = document.getElementById("adminPhone").value;
-
-  if (phone !== "9441319215" && phone !== "9441576705") {
-    alert("Access Denied");
-    return;
-  }
-
-  document.getElementById("login").style.display = "none";
-  document.getElementById("panel").style.display = "block";
-
-  loadAdmin();
-}
-
-
-// ✅ ADMIN BOOKING (FIXED)
-function adminBook() {
-
-  let name = document.getElementById("aname").value;
-  let phone = document.getElementById("aphone").value;
-  let start = document.getElementById("astart").value;
-  let end = document.getElementById("aend").value;
-
-  if (!name || !phone || !start || !end) {
-    alert("Fill all fields");
-    return;
-  }
-
-  db.push({
-    name: name,
-    phone: phone,
-    start: start,
-    end: end,
-    type: "Manual Booking"
-  });
-
-  alert("Admin Booking Added ✅");
 }
 
 
