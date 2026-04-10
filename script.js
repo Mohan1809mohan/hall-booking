@@ -1,36 +1,27 @@
-// 🔥 FIREBASE CONFIG (Replace later with your own if needed)
-const firebaseConfig = {
-  apiKey: "AIzaSyCOCs4iVWCafdXPy-7VuMPu4ynwM95MRkA",
-  authDomain: "hall-booking-504fd.firebaseapp.com",
-  projectId: "hall-booking-504fd",
-  storageBucket: "hall-booking-504fd.firebasestorage.app",
-  messagingSenderId: "279784179164",
-  appId: "1:279784179164:web:5726f97e13e548278fbb19",
-  measurementId: "G-20TVX3JJTZ"
-};
-
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database().ref("bookings");
-
-// 🔐 USERS
+// USERS (ONLY YOU + YOUR FATHER)
 let users = {
-  "9441319215": "1809",
-  "9441576705": "9441"
+  "9441319215": "mohan123",
+  "9441576705": "father123"
 };
+
+// LOAD DATA
+let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
 
 // AUTO LOGIN
 window.onload = function () {
   let user = localStorage.getItem("user");
-  if (user) showApp();
 
-  loadBookings();
+  if (user) {
+    showApp();
+  }
+
+  displayBookings();
 };
 
 // LOGIN
 function login() {
-  let phone = loginPhone.value.trim();
-  let pass = loginPassword.value.trim();
+  let phone = document.getElementById("loginPhone").value.trim();
+  let pass = document.getElementById("loginPassword").value.trim();
 
   if (!users[phone] || users[phone] !== pass) {
     alert("Invalid login ❌");
@@ -43,8 +34,8 @@ function login() {
 
 // SHOW APP
 function showApp() {
-  loginSection.style.display = "none";
-  mainApp.style.display = "block";
+  document.getElementById("loginSection").style.display = "none";
+  document.getElementById("mainApp").style.display = "block";
 }
 
 // LOGOUT
@@ -55,11 +46,11 @@ function logout() {
 
 // BOOK FUNCTION
 function book() {
-  let name = nameInput.value;
-  let phone = phoneInput.value;
-  let type = eventType.value;
-  let start = startInput.value;
-  let end = endInput.value;
+  let name = document.getElementById("name").value;
+  let phone = document.getElementById("phone").value;
+  let type = document.getElementById("eventType").value;
+  let start = document.getElementById("start").value;
+  let end = document.getElementById("end").value;
 
   if (!name || !phone || !type || !start || !end) {
     alert("Fill all fields");
@@ -71,49 +62,54 @@ function book() {
     return;
   }
 
-  db.once("value", snap => {
-    let conflict = false;
+  // ✅ SAME DAY CHANGEOVER LOGIC
+  let conflict = bookings.some(b => {
+    return !(end <= b.start || start >= b.end);
+  });
 
-    snap.forEach(child => {
-      let b = child.val();
+  if (conflict) {
+    alert("Date already booked ❌");
+    return;
+  }
 
-      // ✅ NEW LOGIC (ALLOW SAME DAY CHANGEOVER)
-      if (!(end <= b.start || start >= b.end)) {
-        conflict = true;
-      }
-    });
+  bookings.push({ name, phone, type, start, end });
 
-    if (conflict) {
-      alert("Date already booked ❌");
-      return;
-    }
+  localStorage.setItem("bookings", JSON.stringify(bookings));
 
-    db.push({ name, phone, type, start, end });
+  displayBookings();
+  clearForm();
+}
+
+// DISPLAY BOOKINGS
+function displayBookings() {
+  let list = document.getElementById("list");
+  list.innerHTML = "";
+
+  bookings.forEach((b, index) => {
+    let li = document.createElement("li");
+    li.innerHTML = `
+      <b>${b.start} → ${b.end}</b><br>
+      ${b.name} (${b.phone})<br>
+      ${b.type}
+      <br><br>
+      <button onclick="deleteBooking(${index})">Delete</button>
+    `;
+    list.appendChild(li);
   });
 }
 
-// LOAD BOOKINGS
-function loadBookings() {
-  db.on("value", snap => {
-    list.innerHTML = "";
-
-    snap.forEach(child => {
-      let b = child.val();
-
-      let li = document.createElement("li");
-      li.innerHTML = `
-        <b>${b.start} → ${b.end}</b><br>
-        ${b.name} (${b.phone})<br>
-        ${b.type}
-      `;
-      list.appendChild(li);
-    });
-  });
+// DELETE
+function deleteBooking(index) {
+  bookings.splice(index, 1);
+  localStorage.setItem("bookings", JSON.stringify(bookings));
+  displayBookings();
 }
 
-// ELEMENT SHORTCUTS
-const nameInput = document.getElementById("name");
-const phoneInput = document.getElementById("phone");
-const eventType = document.getElementById("eventType");
-const startInput = document.getElementById("start");
-const endInput = document.getElementById("end");
+// CLEAR FORM
+function clearForm() {
+  document.getElementById("name").value = "";
+  document.getElementById("phone").value = "";
+  document.getElementById("eventType").value = "";
+  document.getElementById("start").value = "";
+  document.getElementById("end").value = "";
+}
