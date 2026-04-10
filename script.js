@@ -15,8 +15,8 @@ const db = firebase.database().ref("bookings");
 
 // 🔐 USERS
 let users = {
-  "9441319215": "mohan123",
-  "9441576705": "father123"
+  "9441319215": "1809",
+  "9441576705": "9441"
 };
 
 // AUTO LOGIN
