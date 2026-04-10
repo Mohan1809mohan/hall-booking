@@ -1,43 +1,66 @@
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: 'Poppins', sans-serif;
   background: url("hall.png") no-repeat center center/cover;
   height: 100vh;
 }
 
-/* DARK OVERLAY */
-.overlay {
-  background: rgba(0,0,0,0.6);
-  height: 100vh;
-  text-align: center;
-  color: white;
-  padding-top: 20px;
+/* CENTER CONTAINER */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
+/* GLASS EFFECT CARD */
+.glass-card {
+  backdrop-filter: blur(15px);
+  background: rgba(255,255,255,0.15);
+  border-radius: 15px;
+  padding: 30px;
+  width: 320px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+/* TITLE */
 h1 {
+  font-size: 20px;
   margin-bottom: 20px;
 }
 
-/* CARD DESIGN */
-.card {
-  background: white;
-  color: black;
-  width: 300px;
-  margin: auto;
-  padding: 20px;
-  border-radius: 12px;
-}
-
 /* INPUTS */
-input, select, button {
-  width: 90%;
-  padding: 10px;
-  margin: 8px;
-  border-radius: 6px;
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+  outline: none;
 }
 
+/* DATE ROW */
+.date-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* BUTTON */
 button {
-  background: darkblue;
-  color: white;
+  width: 100%;
+  padding: 12px;
+  background: #ff4d6d;
   border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* BUTTON HOVER */
+button:hover {
+  background: #ff1e4d;
 }
