@@ -17,38 +17,40 @@
 
     <h1>YADAVA KALYANAMANTAPAM</h1>
 
-    <!-- LOGIN -->
-    <div id="loginBox">
-      <input type="text" id="custPhone" placeholder="Enter Mobile Number">
-      <button onclick="customerLogin()">Continue</button>
-      <button onclick="logout()">Logout</button>
-    </div>
+ <!-- LOGIN -->
+<div id="loginBox">
+  <input type="text" id="custPhone" placeholder="Enter Mobile Number">
+  <button onclick="customerLogin()">Continue</button>
+</div>
 
-    <!-- BOOKING -->
-    <div id="bookingBox" style="display:none;">
+<!-- BOOKING -->
+<div id="bookingBox" style="display:none;">
 
-      <input type="text" id="name" placeholder="Your Name">
+  <!-- ✅ Logout here -->
+  <button onclick="logout()">Logout</button>
 
-     <select id="eventType" onchange="handleOther()">
-        <option value="">Select Function</option>
-        <option>Marriage</option>
-        <option>Birthday</option>
-        <option>Reception</option>
-        <option>Political Meeting</option>
-        <option>Family or Friends Meet</option>
-        <option value="Other">Other</option>
-      </select>
+  <input type="text" id="name" placeholder="Your Name">
 
-      <input type="text" id="otherType" placeholder="Enter function type" style="display:none;">
+  <select id="eventType" onchange="handleOther()">
+    <option value="">Select Function</option>
+    <option>Marriage</option>
+    <option>Birthday</option>
+    <option>Reception</option>
+    <option>Political Meeting</option>
+    <option>Family or Friends Meet</option>
+    <option value="Other">Other</option>
+  </select>
 
-      <div class="date-row">
-        <input type="date" id="start">
-        <input type="date" id="end">
-      </div>
+  <input type="text" id="otherType" placeholder="Enter function type" style="display:none;">
 
-      <button onclick="book()">Confirm Booking</button>
+  <div class="date-row">
+    <input type="date" id="start">
+    <input type="date" id="end">
+  </div>
 
-    </div>
+  <button onclick="book()">Confirm Booking</button>
+
+</div>
 
   </div>
 
