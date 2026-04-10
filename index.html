@@ -1,60 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>YADAVA KALYANAMANDAPAM</title>
-
-  <!-- Mobile Friendly -->
+  <title>YADAVA KALYANAMANTAPAM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>YADAVA KALYANAMANDAPAM</h1>
+<h1>YADAVA KALYANAMANTAPAM</h1>
 
 <!-- LOGIN -->
 <div id="loginSection">
   <h2>Login</h2>
-  <input type="text" id="loginPhone" placeholder="Enter Phone Number">
-  <input type="password" id="loginPassword" placeholder="Enter Password">
+  <input type="text" id="loginPhone" placeholder="Phone Number">
+  <input type="password" id="loginPassword" placeholder="Password">
   <button onclick="login()">Login</button>
 </div>
 
 <!-- MAIN APP -->
 <div id="mainApp" style="display:none;">
 
-  <h3>Welcome Manager 👋</h3>
+  <button onclick="logout()">Logout</button>
 
-  <div class="container">
+  <div class="card">
     <input type="text" id="name" placeholder="Customer Name">
     <input type="text" id="phone" placeholder="Phone Number">
 
     <select id="eventType">
-      <option value="">Select Function Type</option>
+      <option value="">Function Type</option>
       <option>Marriage</option>
       <option>Engagement</option>
       <option>Birthday</option>
-      <option>Political Meeting</option>
       <option>Reception</option>
-      <option>Other</option>
     </select>
 
-    <label>Start Date:</label>
+    <label>Start Date</label>
     <input type="date" id="start">
 
-    <label>End Date:</label>
+    <label>End Date</label>
     <input type="date" id="end">
 
-    <button onclick="book()">Book Now</button>
+    <button onclick="book()">Book</button>
   </div>
 
-  <h2>Bookings</h2>
+  <h3>Bookings</h3>
   <ul id="list"></ul>
 
 </div>
 
-<!-- IMPORTANT (no cache issue) -->
-<script src="script.js?v=20"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"></script>
+
+<script src="script.js"></script>
 
 </body>
 </html>
