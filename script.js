@@ -1,7 +1,7 @@
 // USERS (ONLY YOU + YOUR FATHER)
 let users = {
-  "9441319215": "mohan123",
-  "9441576705": "father123"
+  "9441319215": "1809",
+  "9441576705": "9441"
 };
 
 // LOAD DATA
