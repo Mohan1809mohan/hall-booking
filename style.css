@@ -1,8 +1,7 @@
 body {
   font-family: Arial;
-  margin: 0;
-  background: #eef2f7;
   text-align: center;
+  background: #eef2f7;
 }
 
 h1 {
@@ -15,14 +14,13 @@ h1 {
   background: white;
   margin: 15px;
   padding: 15px;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 input, select, button {
   width: 90%;
   padding: 10px;
   margin: 8px;
-  border-radius: 8px;
 }
 
 button {
@@ -35,5 +33,4 @@ li {
   background: white;
   margin: 10px;
   padding: 10px;
-  border-radius: 10px;
 }
