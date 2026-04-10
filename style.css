@@ -3,39 +3,48 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
+/* BACKGROUND IMAGE FIX */
 .bg {
-  background: url("hall.jpg") no-repeat center center/cover;
+  background: url("hall.png") no-repeat center center;
+  background-size: cover;
   height: 100vh;
 }
 
+/* DARK OVERLAY */
 .overlay {
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.5);
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* CARD */
 .card {
   background: white;
-  padding: 20px;
+  padding: 25px;
   border-radius: 12px;
-  width: 300px;
+  width: 320px;
   text-align: center;
 }
 
+/* INPUTS */
 input, select, button {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
+/* BUTTON */
 button {
-  background: darkblue;
+  background: #1a237e;
   color: white;
   border: none;
+  cursor: pointer;
 }
 
-#calendar {
-  margin-top: 20px;
+button:hover {
+  background: #0d1b5e;
 }
