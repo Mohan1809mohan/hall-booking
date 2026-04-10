@@ -3,46 +3,77 @@
 <head>
   <title>YADAVA KALYANAMANTAPAM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <h1>Book Function Hall</h1>
 
-<div class="card">
-  <input type="text" id="name" placeholder="Customer Name">
-  <input type="text" id="phone" placeholder="Phone Number">
+<input type="text" id="name" placeholder="Name"><br>
+<input type="text" id="phone" placeholder="Phone"><br>
 
-  <select id="eventType" onchange="toggleOtherInput()">
-    <option value="">Function Type</option>
-    <option>Marriage</option>
-    <option>Engagement</option>
-    <option>Birthday</option>
-    <option>Reception</option>
-    <option>Political Meeting</option>
-    <option>Family ot Friends Meet</option>
-    <option value="Other">Other</option>
-  </select>
+<select id="type">
+  <option>Marriage</option>
+  <option>Engagement</option>
+  <option>Birthday</option>
+  <option>Reception</option>
+  <option>Other</option>
+</select><br>
 
-  <input type="text" id="otherType" placeholder="Enter function type" style="display:none;">
+<input type="date" id="start"><br>
+<input type="date" id="end"><br>
 
-  <label>Start Date</label>
-  <input type="date" id="start">
+<button onclick="book()">Book</button>
 
-  <label>End Date</label>
-  <input type="date" id="end">
-
-  <button onclick="book()">Book Now</button>
-</div>
-
-<h3>Booked Dates</h3>
-<ul id="list"></ul>
-
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
-<script src="script.js"></script>
+<script>
+// 🔥 PASTE YOUR FIREBASE CONFIG HERE
+const firebaseConfig = YOUR_FIREBASE_CONFIG;
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database().ref("bookings");
+
+function book() {
+  let name = nameInput.value;
+  let phone = phoneInput.value;
+  let type = typeSelect.value;
+  let start = startInput.value;
+  let end = endInput.value;
+
+  if (!name || !phone || !start || !end) {
+    alert("Fill all fields");
+    return;
+  }
+
+  db.once("value", snap => {
+    let conflict = false;
+
+    snap.forEach(child => {
+      let b = child.val();
+      if (!(end <= b.start || start >= b.end)) {
+        conflict = true;
+      }
+    });
+
+    if (conflict) {
+      alert("Date already booked ❌");
+      return;
+    }
+
+    db.push({ name, phone, type, start, end });
+    alert("Booking successful ✅");
+  });
+}
+
+// shortcuts
+const nameInput = document.getElementById("name");
+const phoneInput = document.getElementById("phone");
+const typeSelect = document.getElementById("type");
+const startInput = document.getElementById("start");
+const endInput = document.getElementById("end");
+
+</script>
 
 </body>
 </html>
