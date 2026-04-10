@@ -37,27 +37,58 @@ function book() {
 
   let name = document.getElementById("name").value;
   let phone = localStorage.getItem("user");
-  let type = eventType.value;
-  let start = startInput.value;
-  let end = endInput.value;
 
-  if (type === "Other") type = otherType.value;
+  let type = document.getElementById("eventType").value;
 
+  let start = document.getElementById("start").value;
+  let end = document.getElementById("end").value;
+
+  if (type === "Other") {
+    type = document.getElementById("otherType").value;
+  }
+
+  // ✅ validation
+  if (!name || !type || !start || !end) {
+    alert("Fill all fields ❗");
+    return;
+  }
+
+  // ✅ check conflict
   db.once("value", snap => {
+
     let conflict = false;
 
-    snap.forEach(c => {
-      let b = c.val();
-      if (!(end <= b.start || start >= b.end)) conflict = true;
+    snap.forEach(child => {
+      let b = child.val();
+
+      if (!(end <= b.start || start >= b.end)) {
+        conflict = true;
+      }
     });
 
-    if (conflict) return alert("Already booked");
+    if (conflict) {
+      alert("Already booked ❌");
+      return;
+    }
 
-    db.push({ name, phone, type, start, end });
+    // ✅ save
+    db.push({
+      name: name,
+      phone: phone,
+      type: type,
+      start: start,
+      end: end
+    });
 
-    alert("Booked");
+    alert("Booking Successful ✅");
 
-    loadCalendar();
+    // clear form
+    document.getElementById("name").value = "";
+    document.getElementById("eventType").value = "";
+    document.getElementById("otherType").value = "";
+    document.getElementById("otherType").style.display = "none";
+    document.getElementById("start").value = "";
+    document.getElementById("end").value = "";
   });
 }
 
