@@ -1,23 +1,23 @@
 // 🔥 Firebase Config
 const firebaseConfig = {
-  apiKey: "PASTE",
-  authDomain: "PASTE",
-  databaseURL: "PASTE",
-  projectId: "PASTE",
-  storageBucket: "PASTE",
-  messagingSenderId: "PASTE",
-  appId: "PASTE"
+  apiKey: "PASTE_HERE",
+  authDomain: "PASTE_HERE",
+  databaseURL: "PASTE_HERE",
+  projectId: "PASTE_HERE",
+  storageBucket: "PASTE_HERE",
+  messagingSenderId: "PASTE_HERE",
+  appId: "PASTE_HERE"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
 
-// LOGIN
+// 👤 LOGIN
 function customerLogin() {
   let phone = document.getElementById("custPhone").value;
 
   if (phone.length < 10) {
-    alert("Enter valid number");
+    alert("Enter valid mobile number");
     return;
   }
 
@@ -27,13 +27,13 @@ function customerLogin() {
   document.getElementById("bookingBox").style.display = "block";
 }
 
-// OTHER OPTION
+// SHOW OTHER FIELD
 document.getElementById("eventType").addEventListener("change", function () {
   let other = document.getElementById("otherType");
   other.style.display = this.value === "Other" ? "block" : "none";
 });
 
-// BOOK
+// 📅 BOOK FUNCTION
 function book() {
   let name = document.getElementById("name").value;
   let phone = localStorage.getItem("customer");
@@ -50,6 +50,7 @@ function book() {
     return;
   }
 
+  // CHECK CONFLICT
   db.once("value", snap => {
     let conflict = false;
 
