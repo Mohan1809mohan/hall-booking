@@ -1,45 +1,58 @@
+// 🔥 Firebase Config (PUT YOUR REAL VALUES)
 const firebaseConfig = {
-  apiKey: "PASTE",
-  authDomain: "PASTE",
-  databaseURL: "PASTE",
-  projectId: "PASTE"
+  apiKey: "PASTE_HERE",
+  authDomain: "PASTE_HERE",
+  databaseURL: "PASTE_HERE",
+  projectId: "PASTE_HERE"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
 
-// CUSTOMER LOGIN
+
+// ✅ CUSTOMER LOGIN
 function customerLogin() {
-  let phone = custPhone.value;
-  if (!phone) return alert("Enter phone");
+  let phone = document.getElementById("custPhone").value;
+
+  if (!phone) {
+    alert("Enter phone number");
+    return;
+  }
 
   localStorage.setItem("user", phone);
 
-  loginBox.style.display = "none";
-  bookingBox.style.display = "block";
-
-  loadCalendar();
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("bookingBox").style.display = "block";
 }
 
-// LOGOUT
+
+// ✅ LOGOUT
 function logout() {
   localStorage.removeItem("user");
   location.reload();
 }
 
-// OTHER OPTION
+
+// ✅ SHOW OTHER INPUT
 function handleOther() {
-  otherType.style.display = (eventType.value === "Other") ? "block" : "none";
+  let type = document.getElementById("eventType").value;
+  let other = document.getElementById("otherType");
+
+  if (type === "Other") {
+    other.style.display = "block";
+  } else {
+    other.style.display = "none";
+    other.value = "";
+  }
 }
 
-// BOOK
+
+// ✅ CUSTOMER BOOKING
 function book() {
 
   let name = document.getElementById("name").value;
   let phone = localStorage.getItem("user");
-
   let type = document.getElementById("eventType").value;
-
   let start = document.getElementById("start").value;
   let end = document.getElementById("end").value;
 
@@ -47,18 +60,16 @@ function book() {
     type = document.getElementById("otherType").value;
   }
 
-  // ✅ validation
   if (!name || !type || !start || !end) {
-    alert("Fill all fields ❗");
+    alert("Fill all fields");
     return;
   }
 
-  // ✅ check conflict
-  db.once("value", snap => {
+  db.once("value").then((snap) => {
 
     let conflict = false;
 
-    snap.forEach(child => {
+    snap.forEach((child) => {
       let b = child.val();
 
       if (!(end <= b.start || start >= b.end)) {
@@ -71,7 +82,6 @@ function book() {
       return;
     }
 
-    // ✅ save
     db.push({
       name: name,
       phone: phone,
@@ -81,84 +91,84 @@ function book() {
     });
 
     alert("Booking Successful ✅");
-
-    // clear form
-    document.getElementById("name").value = "";
-    document.getElementById("eventType").value = "";
-    document.getElementById("otherType").value = "";
-    document.getElementById("otherType").style.display = "none";
-    document.getElementById("start").value = "";
-    document.getElementById("end").value = "";
   });
 }
 
-// CALENDAR
-function loadCalendar() {
-  db.once("value", snap => {
 
-    let events = [];
-
-    snap.forEach(c => {
-      let b = c.val();
-
-      events.push({
-        title: b.type,
-        start: b.start,
-        end: b.end
-      });
-    });
-
-    let cal = new FullCalendar.Calendar(calendar, {
-      initialView: "dayGridMonth",
-      events: events
-    });
-
-    cal.render();
-  });
-}
-
-// ADMIN LOGIN
+// ✅ ADMIN LOGIN
 function adminLogin() {
-  let phone = adminPhone.value;
+  let phone = document.getElementById("adminPhone").value;
 
-  if (phone !== "9441319215" && phone !== "9441576705")
-    return alert("Denied");
+  if (phone !== "9441319215" && phone !== "9441576705") {
+    alert("Access Denied");
+    return;
+  }
 
-  login.style.display = "none";
-  panel.style.display = "block";
+  document.getElementById("login").style.display = "none";
+  document.getElementById("panel").style.display = "block";
 
   loadAdmin();
 }
 
-// ADMIN BOOK
-function adminBook() {
-  let name = aname.value;
-  let phone = aphone.value;
-  let start = astart.value;
-  let end = aend.value;
 
-  db.push({ name, phone, start, end, type: "Manual" });
+// ✅ ADMIN BOOKING (FIXED)
+function adminBook() {
+
+  let name = document.getElementById("aname").value;
+  let phone = document.getElementById("aphone").value;
+  let start = document.getElementById("astart").value;
+  let end = document.getElementById("aend").value;
+
+  if (!name || !phone || !start || !end) {
+    alert("Fill all fields");
+    return;
+  }
+
+  db.push({
+    name: name,
+    phone: phone,
+    start: start,
+    end: end,
+    type: "Manual Booking"
+  });
+
+  alert("Admin Booking Added ✅");
 }
 
-// ADMIN LIST
+
+// ✅ LOAD ADMIN DATA
 function loadAdmin() {
-  db.on("value", snap => {
+
+  db.on("value", (snap) => {
+
+    let list = document.getElementById("list");
+
+    if (!list) return; // prevents error on customer page
 
     list.innerHTML = "";
 
-    snap.forEach(c => {
-      let b = c.val();
-      let id = c.key;
+    snap.forEach((child) => {
 
-      list.innerHTML += `
-        <li>
-          ${b.start} → ${b.end}<br>
-          ${b.name}<br>
-          ${b.type}
-          <button onclick="db.child('${id}').remove()">Delete</button>
-        </li>
+      let b = child.val();
+      let id = child.key;
+
+      let li = document.createElement("li");
+
+      li.innerHTML = `
+        <b>${b.start} → ${b.end}</b><br>
+        ${b.name} (${b.phone})<br>
+        ${b.type}
+        <br><button onclick="deleteBooking('${id}')">Delete</button>
       `;
+
+      list.appendChild(li);
     });
 
   });
+}
+
+
+// ✅ DELETE
+function deleteBooking(id) {
+  db.child(id).remove();
 }
