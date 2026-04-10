@@ -1,103 +1,112 @@
-// Load bookings
-let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
-
-// Show existing bookings
-window.onload = function () {
-  displayBookings();
+// 🔥 FIREBASE CONFIG (Replace later with your own if needed)
+const firebaseConfig = {
+  databaseURL: "https://dummy.firebaseio.com/"
 };
 
-// ✅ LOGIN FUNCTION (NO RESTRICTION)
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database().ref("bookings");
+
+// 🔐 USERS
+let users = {
+  "9441319215": "mohan123",
+  "9441576705": "father123"
+};
+
+// AUTO LOGIN
+window.onload = function () {
+  let user = localStorage.getItem("user");
+  if (user) showApp();
+
+  loadBookings();
+};
+
+// LOGIN
 function login() {
-  let phone = document.getElementById("loginPhone").value.trim();
-  let password = document.getElementById("loginPassword").value.trim();
+  let phone = loginPhone.value.trim();
+  let pass = loginPassword.value.trim();
 
-  // ✅ Allowed users (phone + password)
-  let users = {
-    "9441319215": "1809",
-    "9441576705": "9441"
-  };
-
-  if (!users[phone]) {
-    alert("Invalid phone number ❌");
+  if (!users[phone] || users[phone] !== pass) {
+    alert("Invalid login ❌");
     return;
   }
 
-  if (users[phone] !== password) {
-    alert("Wrong password ❌");
-    return;
-  }
-
-  document.getElementById("loginSection").style.display = "none";
-  document.getElementById("mainApp").style.display = "block";
+  localStorage.setItem("user", phone);
+  showApp();
 }
 
-// ✅ BOOK FUNCTION
-function book() {
-  let name = document.getElementById("name").value;
-  let phone = document.getElementById("phone").value;
-  let eventType = document.getElementById("eventType").value;
-  let start = document.getElementById("start").value;
-  let end = document.getElementById("end").value;
+// SHOW APP
+function showApp() {
+  loginSection.style.display = "none";
+  mainApp.style.display = "block";
+}
 
-  if (!name || !phone || !eventType || !start || !end) {
+// LOGOUT
+function logout() {
+  localStorage.removeItem("user");
+  location.reload();
+}
+
+// BOOK FUNCTION
+function book() {
+  let name = nameInput.value;
+  let phone = phoneInput.value;
+  let type = eventType.value;
+  let start = startInput.value;
+  let end = endInput.value;
+
+  if (!name || !phone || !type || !start || !end) {
     alert("Fill all fields");
     return;
   }
 
   if (start > end) {
-    alert("End date must be after start date");
+    alert("Invalid dates");
     return;
   }
 
-  // 🚫 CHECK OVERLAP
-  let conflict = bookings.some(b => {
-    return !(end < b.start || start > b.end);
-  });
+  db.once("value", snap => {
+    let conflict = false;
 
-  if (conflict) {
-    alert("Date already booked ❌");
-    return;
-  }
+    snap.forEach(child => {
+      let b = child.val();
 
-  // SAVE
-  bookings.push({ name, phone, eventType, start, end });
+      // ✅ NEW LOGIC (ALLOW SAME DAY CHANGEOVER)
+      if (!(end <= b.start || start >= b.end)) {
+        conflict = true;
+      }
+    });
 
-  localStorage.setItem("bookings", JSON.stringify(bookings));
+    if (conflict) {
+      alert("Date already booked ❌");
+      return;
+    }
 
-  displayBookings();
-  clearForm();
-}
-
-// 📋 DISPLAY BOOKINGS
-function displayBookings() {
-  let list = document.getElementById("list");
-  list.innerHTML = "";
-
-  bookings.forEach((b, index) => {
-    let li = document.createElement("li");
-    li.innerHTML = `
-      <b>${b.start} → ${b.end}</b><br>
-      ${b.name} (${b.phone})<br>
-      ${b.eventType}
-      <br><br>
-      <button onclick="deleteBooking(${index})">Delete</button>
-    `;
-    list.appendChild(li);
+    db.push({ name, phone, type, start, end });
   });
 }
 
-// 🗑 DELETE
-function deleteBooking(index) {
-  bookings.splice(index, 1);
-  localStorage.setItem("bookings", JSON.stringify(bookings));
-  displayBookings();
+// LOAD BOOKINGS
+function loadBookings() {
+  db.on("value", snap => {
+    list.innerHTML = "";
+
+    snap.forEach(child => {
+      let b = child.val();
+
+      let li = document.createElement("li");
+      li.innerHTML = `
+        <b>${b.start} → ${b.end}</b><br>
+        ${b.name} (${b.phone})<br>
+        ${b.type}
+      `;
+      list.appendChild(li);
+    });
+  });
 }
 
-// 🔄 CLEAR FORM
-function clearForm() {
-  document.getElementById("name").value = "";
-  document.getElementById("phone").value = "";
-  document.getElementById("eventType").value = "";
-  document.getElementById("start").value = "";
-  document.getElementById("end").value = "";
-}
+// ELEMENT SHORTCUTS
+const nameInput = document.getElementById("name");
+const phoneInput = document.getElementById("phone");
+const eventType = document.getElementById("eventType");
+const startInput = document.getElementById("start");
+const endInput = document.getElementById("end");
