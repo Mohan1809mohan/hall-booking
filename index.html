@@ -4,59 +4,47 @@
   <title>YADAVA KALYANAMANTAPAM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <!-- FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
+<h2>YADAVA KALYANAMANTAPAM</h2>
 
-  <div class="glass-card">
-
-    <h1>YADAVA KALYANAMANTAPAM</h1>
-
- <!-- LOGIN -->
 <div id="loginBox">
   <input type="text" id="custPhone" placeholder="Enter Mobile Number">
-  <button onclick="customerLogin()">Continue</button>
+  <button onclick="customerLogin()">Login</button>
 </div>
 
-<!-- BOOKING -->
 <div id="bookingBox" style="display:none;">
 
-  <!-- ✅ Logout here -->
   <button onclick="logout()">Logout</button>
 
-  <input type="text" id="name" placeholder="Your Name">
+  <input type="text" id="name" placeholder="Name">
 
   <select id="eventType" onchange="handleOther()">
-    <option value="">Select Function</option>
+    <option value="">Function</option>
     <option>Marriage</option>
     <option>Birthday</option>
     <option>Reception</option>
-    <option>Political Meeting</option>
-    <option>Family or Friends Meet</option>
     <option value="Other">Other</option>
   </select>
 
-  <input type="text" id="otherType" placeholder="Enter function type" style="display:none;">
+  <input type="text" id="otherType" placeholder="Enter type" style="display:none;">
 
-  <div class="date-row">
-    <input type="date" id="start">
-    <input type="date" id="end">
-  </div>
+  <input type="date" id="start">
+  <input type="date" id="end">
 
   <button onclick="book()">Confirm Booking</button>
 
+  <h3>Booked Dates</h3>
+  <div id="calendar"></div>
+
 </div>
 
-  </div>
-
-</div>
-
-<!-- Firebase -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
