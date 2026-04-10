@@ -1,4 +1,4 @@
-// 🔥 Firebase Config (keep your own values)
+// 🔥 Firebase Config (PUT YOUR VALUES)
 const firebaseConfig = {
   apiKey: "PASTE_HERE",
   authDomain: "PASTE_HERE",
@@ -13,23 +13,32 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
 
 
-// ✅ WAIT FOR PAGE LOAD (IMPORTANT FIX)
-document.addEventListener("DOMContentLoaded", function () {
+// 🚀 RUN AFTER PAGE LOAD
+window.onload = function () {
 
-  const eventType = document.getElementById("eventType");
-  const otherInput = document.getElementById("otherType");
+  // ✅ Auto login (remember user)
+  let savedUser = localStorage.getItem("customer");
+  if (savedUser) {
+    showBooking();
+  }
 
-  eventType.addEventListener("change", function () {
-    if (this.value === "Other") {
-      otherInput.style.display = "block";
-      otherInput.focus(); // nice UX
-    } else {
-      otherInput.style.display = "none";
-      otherInput.value = "";
-    }
-  });
+  // ✅ Other option logic
+  let eventType = document.getElementById("eventType");
+  let otherInput = document.getElementById("otherType");
 
-});
+  if (eventType) {
+    eventType.addEventListener("change", function () {
+      if (this.value === "Other") {
+        otherInput.style.display = "block";
+        otherInput.focus();
+      } else {
+        otherInput.style.display = "none";
+        otherInput.value = "";
+      }
+    });
+  }
+
+};
 
 
 // 👤 CUSTOMER LOGIN
@@ -41,10 +50,24 @@ function customerLogin() {
     return;
   }
 
+  // ✅ Save login
   localStorage.setItem("customer", phone);
 
+  showBooking();
+}
+
+
+// 📦 SHOW BOOKING PAGE
+function showBooking() {
   document.getElementById("loginBox").style.display = "none";
   document.getElementById("bookingBox").style.display = "block";
+}
+
+
+// 🚪 LOGOUT
+function logout() {
+  localStorage.removeItem("customer");
+  location.reload();
 }
 
 
@@ -56,7 +79,7 @@ function book() {
   let start = document.getElementById("start").value;
   let end = document.getElementById("end").value;
 
-  // 👉 handle "Other"
+  // 👉 Handle "Other"
   if (type === "Other") {
     type = document.getElementById("otherType").value;
   }
@@ -66,13 +89,14 @@ function book() {
     return;
   }
 
-  // ❌ CHECK DATE CONFLICT
+  // ❌ DATE CONFLICT CHECK
   db.once("value", snap => {
     let conflict = false;
 
     snap.forEach(child => {
       let b = child.val();
 
+      // overlap condition
       if (!(end <= b.start || start >= b.end)) {
         conflict = true;
       }
@@ -83,11 +107,12 @@ function book() {
       return;
     }
 
+    // ✅ SAVE BOOKING
     db.push({ name, phone, type, start, end });
 
     alert("Booking Confirmed 🎉");
 
-    // 🔄 clear form
+    // 🔄 RESET FORM
     document.getElementById("name").value = "";
     document.getElementById("eventType").value = "";
     document.getElementById("otherType").value = "";
