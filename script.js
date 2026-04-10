@@ -61,7 +61,7 @@ function book() {
   }
 
   if (!name || !type || !start || !end) {
-    alert("Fill all fields");
+    alert("Fill all fields ❗");
     return;
   }
 
@@ -76,6 +76,23 @@ function book() {
         conflict = true;
       }
     });
+
+    if (conflict) {
+      alert("Already booked ❌");
+      return;
+    }
+
+    db.push({
+      name: name,
+      phone: phone,
+      type: type,
+      start: start,
+      end: end
+    });
+
+    alert("Booking Successful ✅");
+  });
+}
 
     if (conflict) {
       alert("Already booked ❌");
