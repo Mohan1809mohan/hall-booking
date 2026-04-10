@@ -1,7 +1,14 @@
 // 🔥 FIREBASE CONFIG (Replace later with your own if needed)
 const firebaseConfig = {
-  databaseURL: "https://dummy.firebaseio.com/"
+  apiKey: "AIzaSyCOCs4iVWCafdXPy-7VuMPu4ynwM95MRkA",
+  authDomain: "hall-booking-504fd.firebaseapp.com",
+  projectId: "hall-booking-504fd",
+  storageBucket: "hall-booking-504fd.firebasestorage.app",
+  messagingSenderId: "279784179164",
+  appId: "1:279784179164:web:5726f97e13e548278fbb19",
+  measurementId: "G-20TVX3JJTZ"
 };
+
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
