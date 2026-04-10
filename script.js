@@ -12,12 +12,12 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database().ref("bookings");
 
-// 👤 CUSTOMER LOGIN
+// LOGIN
 function customerLogin() {
   let phone = document.getElementById("custPhone").value;
 
   if (phone.length < 10) {
-    alert("Enter valid phone");
+    alert("Enter valid number");
     return;
   }
 
@@ -27,13 +27,13 @@ function customerLogin() {
   document.getElementById("bookingBox").style.display = "block";
 }
 
-// SHOW OTHER INPUT
+// OTHER OPTION
 document.getElementById("eventType").addEventListener("change", function () {
   let other = document.getElementById("otherType");
   other.style.display = this.value === "Other" ? "block" : "none";
 });
 
-// BOOK FUNCTION
+// BOOK
 function book() {
   let name = document.getElementById("name").value;
   let phone = localStorage.getItem("customer");
@@ -68,6 +68,6 @@ function book() {
 
     db.push({ name, phone, type, start, end });
 
-    alert("Booking Successful ✅");
+    alert("Booking Confirmed 🎉");
   });
 }
